@@ -3,8 +3,8 @@ FROM golang:1.20 AS build
 COPY . /src
 WORKDIR /src
 
-RUN --mount=type=cache,target=/go make vendor
-RUN --mount=type=cache,target=/root/.cache/go-build make build
+RUN --mount=type=cache,target=/go go mod download
+RUN --mount=type=cache,target=/root/.cache/go-build go build -race -o bin/app .
 
 # Промежуточный образ, на основе которого будет собран финальный
 FROM alpine:3.18.2 AS bin-image
