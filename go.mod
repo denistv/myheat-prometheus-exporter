@@ -3,7 +3,7 @@ module github.com/denistv/evan-prometheus-exporter
 go 1.20
 
 require (
-	github.com/denistv/wdlogger v0.0.0-20240301131110-e3ce9e8d2b32
+	github.com/denistv/wdlogger v0.0.0-20240301134204-68f1f005d70f
 	github.com/prometheus/client_golang v1.19.0
 )
 

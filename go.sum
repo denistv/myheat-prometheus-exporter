@@ -8,6 +8,8 @@ github.com/denistv/wdlogger v0.0.0-20240301111737-4d4a10d43acf h1:fIH3vRdsSXjm7T
 github.com/denistv/wdlogger v0.0.0-20240301111737-4d4a10d43acf/go.mod h1:iYwC0aCVlQQJkbH0dnCTABLwNPZWpu/y30jLl6ynDUU=
 github.com/denistv/wdlogger v0.0.0-20240301131110-e3ce9e8d2b32 h1:qicjmleYpwsVvTf2ifukjYLx8P3QCh8G8l8w4YR3Pzc=
 github.com/denistv/wdlogger v0.0.0-20240301131110-e3ce9e8d2b32/go.mod h1:iYwC0aCVlQQJkbH0dnCTABLwNPZWpu/y30jLl6ynDUU=
+github.com/denistv/wdlogger v0.0.0-20240301134204-68f1f005d70f h1:Odcb0P1PvqR5wRwQyevzjVI2gE+pi8CmNDDJtPL/JlE=
+github.com/denistv/wdlogger v0.0.0-20240301134204-68f1f005d70f/go.mod h1:iYwC0aCVlQQJkbH0dnCTABLwNPZWpu/y30jLl6ynDUU=
 github.com/go-logfmt/logfmt v0.5.1/go.mod h1:WYhtIu8zTZfxdn5+rREduYbwxfcBr/Vr6KEVveWlfTs=
 github.com/google/go-cmp v0.6.0 h1:ofyhxvXcZhMsU5ulbFiLKl/XBFqE1GSq7atu8tAmTRI=
 github.com/jpillora/backoff v1.0.0/go.mod h1:J/6gKK9jxlEcS3zixgDgUAsiuZ7yrSoa/FX5e0EB2j4=
