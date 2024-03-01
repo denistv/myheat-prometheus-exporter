@@ -3,10 +3,10 @@ package services
 import (
 	"context"
 	"github.com/denistv/evan-prometheus-exporter/clients/evan"
-	logger "github.com/denistv/wdlogger"
+	"github.com/denistv/wdlogger"
 )
 
-func NewExporter(evanClient *evan.Client, l logger.Logger) *Exporter {
+func NewExporter(evanClient *evan.Client, l wdlogger.Logger) *Exporter {
 	return &Exporter{
 		logger:     l,
 		evanClient: evanClient,
@@ -14,7 +14,7 @@ func NewExporter(evanClient *evan.Client, l logger.Logger) *Exporter {
 }
 
 type Exporter struct {
-	logger     logger.Logger
+	logger     wdlogger.Logger
 	evanClient *evan.Client
 }
 
