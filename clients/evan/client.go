@@ -142,14 +142,15 @@ type GetDeviceInfoResponse struct {
 		DataActual bool          `json:"dataActual"`
 		Engs       []interface{} `json:"engs"`
 		Envs       []struct {
-			Demand       bool    `json:"demand"`
-			ID           int64   `json:"id"`
-			Name         string  `json:"name"`
-			Severity     int64   `json:"severity"`
-			SeverityDesc string  `json:"severityDesc"`
-			Target       float64 `json:"target"`
-			Type         string  `json:"type"`
-			Value        float64 `json:"value"`
+			Demand       bool   `json:"demand"`
+			ID           int64  `json:"id"`
+			Name         string `json:"name"`
+			Severity     int64  `json:"severity"`
+			SeverityDesc string `json:"severityDesc"`
+			// TODO write test for unmarshal value: "38.56874939532035"
+			//Target       float64 `json:"target"`
+			Type  string  `json:"type"`
+			Value float64 `json:"value"`
 		} `json:"envs"`
 		Heaters []struct {
 			BurnerHeating bool        `json:"burnerHeating"`
