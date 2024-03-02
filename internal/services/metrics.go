@@ -9,11 +9,11 @@ import (
 )
 
 const (
-	metricNameEnvTempCurrent = "myheat_exporter_environment_temp_current"
-	metricNameEnvTempTarget  = "myheat_exporter_environment_temp_target"
-	metricNameEnvHeatDemand  = "myheat_exporter_environment_heat_demand"
+	metricNameEnvTempCurrent = "myheat_env_temp_current"
+	metricNameEnvTempTarget  = "myheat_env_temp_target"
+	metricNameEnvHeatDemand  = "myheat_env_heat_demand"
 
-	metricNameDeviceWeatherTemp = "myheat_exporter_device_weather_temp"
+	metricNameDeviceWeatherTemp = "myheat_dev_weather_temp"
 )
 
 func NewMetrics(logger wdlogger.Logger) *Metrics {
@@ -118,7 +118,7 @@ func (m *Metrics) SetEnvironmentHeatDemand(id int64, name string, value bool) {
 	)
 
 	labels := envLabels(id, name)
-	m.envTempTargetMetric.With(labels).Set(bTf(value))
+	m.envHeatDemandMetric.With(labels).Set(bTf(value))
 }
 
 func (m *Metrics) SetDeviceWeatherTemp(id int64, name string, city string, value float64) {
