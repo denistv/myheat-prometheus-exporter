@@ -148,9 +148,9 @@ type GetDeviceInfoResponse struct {
 			Severity     int64  `json:"severity"`
 			SeverityDesc string `json:"severityDesc"`
 			// TODO write test for unmarshal value: "38.56874939532035"
-			//Target       float64 `json:"target"`
-			Type  string  `json:"type"`
-			Value float64 `json:"value"`
+			Target float64 `json:"target"`
+			Type   string  `json:"type"`
+			Value  float64 `json:"value"`
 		} `json:"envs"`
 		Heaters []struct {
 			BurnerHeating bool        `json:"burnerHeating"`
@@ -162,7 +162,7 @@ type GetDeviceInfoResponse struct {
 			Name          string      `json:"name"`
 			Pressure      interface{} `json:"pressure"`
 			ReturnTemp    interface{} `json:"returnTemp"`
-			TargetTemp    int64       `json:"targetTemp"`
+			//TargetTemp    int64       `json:"targetTemp"`
 		} `json:"heaters"`
 		Severity     int64  `json:"severity"`
 		SeverityDesc string `json:"severityDesc"`
