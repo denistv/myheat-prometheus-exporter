@@ -6,9 +6,10 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
-	"github.com/denistv/evan-prometheus-exporter/clients/evan"
-	"github.com/denistv/evan-prometheus-exporter/internal/services"
+	"github.com/denistv/myheat-prometheus-exporter/internal/clients/myheat"
+	"github.com/denistv/myheat-prometheus-exporter/internal/services"
 	"github.com/denistv/wdlogger"
 	"github.com/denistv/wdlogger/wrappers/stdwrap"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -23,17 +24,24 @@ func main() {
 
 	logger := stdwrap.NewSTDWrapper()
 
-	clientCfg := evan.NewDefaultConfig()
-	clientCfg.Login = os.Getenv("EVAN_EXPORTER_LOGIN")
-	clientCfg.Key = os.Getenv("EVAN_EXPORTER_KEY")
+	clientCfg := myheat.NewDefaultConfig()
+	clientCfg.Login = os.Getenv("MYHEAT_LOGIN")
+	clientCfg.Key = os.Getenv("MYHEAT_KEY")
 
 	if err := clientCfg.Validate(); err != nil {
-		logger.Fatal("validating config", wdlogger.NewErrorField("error", err))
+		logger.Fatal("validating MyHeat client config", wdlogger.NewErrorField("error", err))
 	}
 
-	evanClient := evan.NewClient(clientCfg, logger)
+	myheatClient := myheat.NewClient(clientCfg, logger)
 	metricsService := services.NewMetrics(logger)
-	exp := services.NewExporter(evanClient, logger, metricsService)
+
+	exporterPullInterval, err := time.ParseDuration(os.Getenv("MYHEAT_EXPORTER_PULL_INTERVAL"))
+	if err != nil {
+		logger.Fatal("validating exporter config", wdlogger.NewErrorField("error", err))
+	}
+
+	expCfg := services.NewExporterConfig(exporterPullInterval)
+	exp := services.NewExporter(expCfg, myheatClient, logger, metricsService)
 
 	go exp.Run(ctx)
 

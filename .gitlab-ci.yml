@@ -1,16 +1,7 @@
-default:
-  image: registry.denistv777.ru/docker:24.0.5
-  services:
-    - name: docker:24.0.5-dind
-variables:
-  DOCKER_TLS_CERTDIR: "/certs"
-  DOCKER_BUILDKIT: "1"
 stages:
   - build
-
 build:
-  image: registry.denistv777.ru/docker:24.0.5
   stage: build
   script:
-    - docker build -t registry.denistv777.ru/open/evan-prometheus-exporter:latest --target=app-image -f Dockerfile .
-    - docker push registry.denistv777.ru/open/evan-prometheus-exporter:latest
+    - docker build -t registry.denistv777.ru/open/myheat-prometheus-exporter:latest --target=app-image -f Dockerfile .
+    - docker push registry.denistv777.ru/open/myheat-prometheus-exporter:latest
