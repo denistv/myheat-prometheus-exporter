@@ -1,4 +1,4 @@
-package evan
+package myheat
 
 import (
 	"bytes"
@@ -6,19 +6,26 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	logger "github.com/denistv/wdlogger"
 	"io"
 	"net/http"
+
+	"github.com/denistv/wdlogger"
 )
 
 const endpointURL = "https://my2.myheat.net/api/request/"
 
-type Action string
+type action string
 
 const (
-	actionGetDevices    Action = "getDevices"
-	actionGetDeviceInfo Action = "getDeviceInfo"
+	actionGetDevices    action = "getDevices"
+	actionGetDeviceInfo action = "getDeviceInfo"
 )
+
+const severityNormal = 1
+
+const successResponse = 0
+
+const EnvTypeRoomTemperature = "room_temperature"
 
 func NewDefaultConfig() Config {
 	return Config{
@@ -44,7 +51,7 @@ func (c *Config) Validate() error {
 	return nil
 }
 
-func NewClient(cfg Config, l logger.Logger) *Client {
+func NewClient(cfg Config, l wdlogger.Logger) *Client {
 	return &Client{
 		cfg:        cfg,
 		logger:     l,
@@ -55,7 +62,7 @@ func NewClient(cfg Config, l logger.Logger) *Client {
 
 type Client struct {
 	cfg        Config
-	logger     logger.Logger
+	logger     wdlogger.Logger
 	httpClient *http.Client
 }
 
@@ -68,7 +75,7 @@ func NewGetDevicesRequest(login, key string) GetDevicesRequest {
 }
 
 type GetDevicesRequest struct {
-	Action Action `json:"action"`
+	Action action `json:"action"`
 	Login  string `json:"login"`
 	Key    string `json:"key"`
 }
@@ -79,17 +86,21 @@ type GetDevicesResponse struct {
 	RefreshPage bool                `json:"refreshPage"`
 }
 
+type Device struct {
+	ID           int64  `json:"id"`
+	Name         string `json:"name"`
+	City         string `json:"city"`
+	Severity     int64  `json:"severity"`
+	SeverityDesc string `json:"severityDesc"`
+}
+
 func (c *Client) GetDevices(ctx context.Context) (GetDevicesResponse, error) {
 	c.logger.Info("GetDevices - send request")
 	defer func() {
 		c.logger.Info("GetDevices - request completed")
 	}()
 
-	req := GetDevicesRequest{
-		Action: actionGetDevices,
-		Login:  c.cfg.Login,
-		Key:    c.cfg.Key,
-	}
+	req := NewGetDevicesRequest(c.cfg.Login, c.cfg.Key)
 
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -120,16 +131,25 @@ func (c *Client) GetDevices(ctx context.Context) (GetDevicesResponse, error) {
 		return GetDevicesResponse{}, err
 	}
 
-	if res.Err != 0 {
-		c.logger.Error("server returned error", logger.NewInt64Field("err", res.Err))
+	if res.Err != successResponse {
+		c.logger.Error("server returned error", wdlogger.NewInt64Field("err", res.Err))
 		return GetDevicesResponse{}, fmt.Errorf("server returned error")
 	}
 
 	return res, nil
 }
 
+func NewGetDeviceInfoRequest(login, key string, deviceID int64) GetDeviceInfoRequest {
+	return GetDeviceInfoRequest{
+		Action:   actionGetDeviceInfo,
+		Login:    login,
+		Key:      key,
+		DeviceID: deviceID,
+	}
+}
+
 type GetDeviceInfoRequest struct {
-	Action   Action `json:"action"`
+	Action   action `json:"action"`
 	DeviceID int64  `json:"deviceId"`
 	Login    string `json:"login"`
 	Key      string `json:"key"`
@@ -142,15 +162,14 @@ type GetDeviceInfoResponse struct {
 		DataActual bool          `json:"dataActual"`
 		Engs       []interface{} `json:"engs"`
 		Envs       []struct {
-			Demand       bool   `json:"demand"`
-			ID           int64  `json:"id"`
-			Name         string `json:"name"`
-			Severity     int64  `json:"severity"`
-			SeverityDesc string `json:"severityDesc"`
-			// TODO write test for unmarshal value: "38.56874939532035"
-			//Target       float64 `json:"target"`
-			Type  string  `json:"type"`
-			Value float64 `json:"value"`
+			Demand       bool    `json:"demand"`
+			ID           int64   `json:"id"`
+			Name         string  `json:"name"`
+			Severity     int64   `json:"severity"`
+			SeverityDesc string  `json:"severityDesc"`
+			Target       float64 `json:"target"`
+			Type         string  `json:"type"`
+			Value        float64 `json:"value"`
 		} `json:"envs"`
 		Heaters []struct {
 			BurnerHeating bool        `json:"burnerHeating"`
@@ -162,31 +181,20 @@ type GetDeviceInfoResponse struct {
 			Name          string      `json:"name"`
 			Pressure      interface{} `json:"pressure"`
 			ReturnTemp    interface{} `json:"returnTemp"`
-			TargetTemp    int64       `json:"targetTemp"`
+			// TODO write test for unmarshal value: "38.56874939532035"
+			//TargetTemp    int64       `json:"targetTemp"`
 		} `json:"heaters"`
-		Severity     int64  `json:"severity"`
-		SeverityDesc string `json:"severityDesc"`
-		WeatherTemp  string `json:"weatherTemp"`
+		Severity     int64   `json:"severity"`
+		SeverityDesc string  `json:"severityDesc"`
+		WeatherTemp  float64 `json:"weatherTemp,string"` // Example: "1.4600000000000364"
 	} `json:"data"`
 	Err         int64 `json:"err"`
 	RefreshPage bool  `json:"refreshPage"`
 }
 
-type Device struct {
-	ID           int64  `json:"id"`
-	Name         string `json:"name"`
-	City         string `json:"city"`
-	Severity     int64  `json:"severity"`
-	SeverityDesc string `json:"severityDesc"`
-}
-
 func (c *Client) GetDeviceInfo(ctx context.Context, id int64) (GetDeviceInfoResponse, error) {
-	req := GetDeviceInfoRequest{
-		Action:   actionGetDeviceInfo,
-		Login:    c.cfg.Login,
-		Key:      c.cfg.Key,
-		DeviceID: id,
-	}
+	req := NewGetDeviceInfoRequest(c.cfg.Login, c.cfg.Key, id)
+
 	data, err := json.Marshal(req)
 	if err != nil {
 		return GetDeviceInfoResponse{}, err
@@ -216,8 +224,8 @@ func (c *Client) GetDeviceInfo(ctx context.Context, id int64) (GetDeviceInfoResp
 		return GetDeviceInfoResponse{}, err
 	}
 
-	if res.Err != 0 {
-		c.logger.Error("server returned error", logger.NewInt64Field("err", res.Err))
+	if res.Err != successResponse {
+		c.logger.Error("server returned error", wdlogger.NewInt64Field("err", res.Err))
 		return GetDeviceInfoResponse{}, fmt.Errorf("server returned error")
 	}
 

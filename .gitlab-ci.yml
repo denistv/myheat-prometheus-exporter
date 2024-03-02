@@ -9,8 +9,8 @@ stages:
   - build
 
 build:
-  image: registry.denistv777.ru/docker:24.0.5
   stage: build
   script:
-    - docker build -t registry.denistv777.ru/open/evan-prometheus-exporter:latest --target=app-image -f Dockerfile .
-    - docker push registry.denistv777.ru/open/evan-prometheus-exporter:latest
+    - docker build -t registry.denistv777.ru/open/myheat-prometheus-exporter --target=app-image -f Dockerfile --label "version=`git describe --tags`" .
+    - docker push registry.denistv777.ru/open/myheat-prometheus-exporter
+
