@@ -29,7 +29,7 @@ type Metrics struct {
 }
 
 // SetEnvironmentTemp Задать текущую температуру
-func (m *Metrics) SetEnvironmentTemp(id int64, name string, value float64, target float64) {
+func (m *Metrics) SetEnvironmentTemp(id int64, name string, value float64) {
 	m.logger.Info(
 		"setting environment temp",
 		wdlogger.NewInt64Field("id", id),

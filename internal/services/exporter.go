@@ -73,7 +73,7 @@ func (e *Exporter) pull(ctx context.Context) error {
 		}
 
 		for _, env := range deviceInfo.Data.Envs {
-			e.metricsService.SetEnvironmentTemp(env.ID, env.Name, env.Value, env.Target)
+			e.metricsService.SetEnvironmentTemp(env.ID, env.Name, env.Value)
 		}
 	}
 
