@@ -51,6 +51,6 @@ services:
 Экспортер запускает веб-сервер на порту `3000/tcp` и предоставляет метрики по роуту `/metrics`.
 
 # Grafana
-Можно импортировать подготовленный дэшбоард ID#
+Можно импортировать подготовленный дэшбоард [Grafana Dashboard JSON Model](./grafana-dashboard.json).
 
 ![alt Grafana Dashboard](./docs/grafana.png)
