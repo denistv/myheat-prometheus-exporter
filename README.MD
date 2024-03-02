@@ -3,9 +3,10 @@
 Это различное нагревательное оборудование, котлы, насосы, датчики, часто использующиеся в частных домах.
 
 Сейчас умеет экспортировать следующие метрики:
-- Температура помещения `myheat_exporter_environment_temperature`
-- Целевая температура помещения `myheat_exporter_target_environment_temperature`
-- Температура на улице `myheat_exporter_weather_temperature`
+- Температура помещения `myheat_exporter_environment_temp_current`
+- Целевая температура помещения `myheat_exporter_environment_temp_target`
+- Происходит нагрев для достижения целевой температуры `myheat_exporter_environment_heat_demand`
+- Температура на улице `myheat_exporter_device_weather_temp`
 
 # Запуск
 Для запуска экспортера достаточно собрать образ и запустить контейнер.
