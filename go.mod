@@ -1,4 +1,4 @@
-module github.com/denistv/evan-prometheus-exporter
+module github.com/denistv/myheat-prometheus-exporter
 
 go 1.20
 
