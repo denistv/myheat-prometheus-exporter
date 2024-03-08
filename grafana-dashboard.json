@@ -18,7 +18,7 @@
   "description": "Dashboard for system-controlled equipment https://myheat.net.\nThese are various heating equipment, boilers, pumps, sensors, often used in private homes.",
   "editable": true,
   "fiscalYearStartMonth": 0,
-  "graphTooltip": 0,
+  "graphTooltip": 1,
   "id": 6,
   "links": [
     {
@@ -62,7 +62,7 @@
           "decimals": 1,
           "mappings": [],
           "max": 30,
-          "min": 0,
+          "min": 5,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -111,7 +111,7 @@
           "fields": "",
           "values": false
         },
-        "showThresholdLabels": false,
+        "showThresholdLabels": true,
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
@@ -297,7 +297,7 @@
           "decimals": 1,
           "mappings": [],
           "max": 35,
-          "min": -10,
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -350,7 +350,7 @@
           "fields": "",
           "values": false
         },
-        "showThresholdLabels": false,
+        "showThresholdLabels": true,
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
@@ -529,7 +529,7 @@
           "fields": "",
           "values": false
         },
-        "showPercentChange": true,
+        "showPercentChange": false,
         "textMode": "value",
         "wideLayout": true
       },
@@ -600,7 +600,7 @@
           "fields": "",
           "values": false
         },
-        "showPercentChange": true,
+        "showPercentChange": false,
         "textMode": "value",
         "wideLayout": true
       },
@@ -636,7 +636,7 @@
           "color": {
             "mode": "thresholds"
           },
-          "displayName": "Целевая температура",
+          "displayName": "Целевая",
           "fieldMinMax": false,
           "mappings": [],
           "thresholds": {
@@ -662,7 +662,7 @@
       "id": 22,
       "options": {
         "colorMode": "value",
-        "graphMode": "none",
+        "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
@@ -743,7 +743,7 @@
           "fields": "",
           "values": false
         },
-        "showPercentChange": true,
+        "showPercentChange": false,
         "textMode": "value",
         "wideLayout": true
       },
@@ -815,7 +815,7 @@
           "fields": "",
           "values": false
         },
-        "showPercentChange": true,
+        "showPercentChange": false,
         "textMode": "value",
         "wideLayout": true
       },
@@ -849,8 +849,74 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "fixedColor": "green",
             "mode": "thresholds"
+          },
+          "displayName": "Затраты на электричество",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "currencyRUB",
+          "unitScale": true
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 0,
+        "y": 7
+      },
+      "id": 23,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.3.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "bf607a36-0e67-4341-9e53-aa9612ddea8c"
+          },
+          "editorMode": "code",
+          "expr": "(increase(myheat_env_heat_demand_seconds_total[$__range]) / 60 / 60) * $heater_kwt * $electricity_tariff_1",
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "bf607a36-0e67-4341-9e53-aa9612ddea8c"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "green",
+            "mode": "fixed"
           },
           "custom": {
             "fillOpacity": 70,
@@ -859,13 +925,28 @@
               "tooltip": false,
               "viz": false
             },
-            "insertNulls": false,
+            "insertNulls": 3600000,
             "lineWidth": 0,
             "spanNulls": false
           },
           "decimals": 1,
           "displayName": "Нагрев",
-          "mappings": [],
+          "fieldMinMax": true,
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "blue",
+                  "index": 0
+                },
+                "1": {
+                  "color": "green",
+                  "index": 1
+                }
+              },
+              "type": "value"
+            }
+          ],
           "max": 1,
           "min": 0,
           "noValue": "0",
@@ -875,14 +956,6 @@
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "blue",
-                "value": 0
-              },
-              {
-                "color": "green",
-                "value": 1
               }
             ]
           },
@@ -892,9 +965,9 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 4,
-        "w": 24,
-        "x": 0,
+        "h": 5,
+        "w": 20,
+        "x": 4,
         "y": 7
       },
       "id": 4,
@@ -935,7 +1008,7 @@
           "useBackend": false
         }
       ],
-      "title": "История включений",
+      "title": "История нагрева котла",
       "type": "state-timeline"
     },
     {
@@ -944,110 +1017,12 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 11
+        "y": 12
       },
       "id": 14,
       "panels": [],
       "title": "Графики температур",
       "type": "row"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "bf607a36-0e67-4341-9e53-aa9612ddea8c"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
-            "fillOpacity": 70,
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineWidth": 0,
-            "spanNulls": false
-          },
-          "decimals": 1,
-          "displayName": "Цель",
-          "fieldMinMax": false,
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "dark-blue",
-                "value": null
-              },
-              {
-                "color": "light-blue",
-                "value": 10
-              },
-              {
-                "color": "light-green",
-                "value": 15
-              },
-              {
-                "color": "semi-dark-green",
-                "value": 24
-              },
-              {
-                "color": "red",
-                "value": 26
-              }
-            ]
-          },
-          "unit": "celsius",
-          "unitScale": true
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 24,
-        "x": 0,
-        "y": 12
-      },
-      "id": 17,
-      "options": {
-        "alignValue": "center",
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "mergeValues": true,
-        "rowHeight": 0.9,
-        "showValue": "always",
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "bf607a36-0e67-4341-9e53-aa9612ddea8c"
-          },
-          "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "myheat_env_temp_target",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A",
-          "useBackend": false
-        }
-      ],
-      "title": "Целевая температура помещения",
-      "type": "state-timeline"
     },
     {
       "datasource": {
@@ -1091,6 +1066,7 @@
               "mode": "off"
             }
           },
+          "decimals": 2,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -1122,7 +1098,7 @@
         "h": 6,
         "w": 24,
         "x": 0,
-        "y": 18
+        "y": 13
       },
       "id": 16,
       "options": {
@@ -1152,6 +1128,23 @@
           "legendFormat": "{{name}}",
           "range": true,
           "refId": "A",
+          "useBackend": false
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "bf607a36-0e67-4341-9e53-aa9612ddea8c"
+          },
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "myheat_env_temp_target",
+          "fullMetaSearch": false,
+          "hide": true,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "B",
           "useBackend": false
         }
       ],
@@ -1230,7 +1223,7 @@
         "h": 6,
         "w": 24,
         "x": 0,
-        "y": 24
+        "y": 19
       },
       "id": 18,
       "options": {
@@ -1274,16 +1267,43 @@
     "myheat"
   ],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "description": "Дневной тариф на электричество",
+        "hide": 2,
+        "label": "Тариф на электричество 1",
+        "name": "electricity_tariff_1",
+        "query": "4.21",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "description": "Ночной тариф на электричество",
+        "hide": 2,
+        "label": "Тариф на электричество 2",
+        "name": "electricity_tariff_2",
+        "query": "4.21",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "hide": 2,
+        "label": "Суммарная мощность котла в кВт",
+        "name": "heater_kwt",
+        "query": "9",
+        "skipUrlSync": false,
+        "type": "constant"
+      }
+    ]
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-12h",
     "to": "now"
   },
   "timepicker": {},
-  "timezone": "",
+  "timezone": "browser",
   "title": "MyHeat devices",
   "uid": "b7b5ae01-cab9-4c25-8a06-24824c4711d2",
-  "version": 97,
-  "weekStart": ""
+  "version": 126,
+  "weekStart": "monday"
 }

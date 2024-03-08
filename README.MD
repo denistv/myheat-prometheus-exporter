@@ -7,6 +7,7 @@
 - Целевая температура помещения `myheat_env_temp_target`
 - Происходит нагрев для достижения целевой температуры `myheat_env_heat_demand`
 - Температура на улице `myheat_dev_weather_temp`
+- Общее время котла во включенном состоянии `myheat_env_heat_demand_seconds_total`. Используется для подсчета энергопотребления
 
 # Запуск
 Для запуска экспортера достаточно собрать образ и запустить контейнер.
@@ -54,3 +55,8 @@ services:
 Можно импортировать подготовленный дэшбоард [Grafana Dashboard JSON Model](./grafana-dashboard.json).
 
 ![alt Grafana Dashboard](./docs/grafana.png)
+
+Переменные:
+- `electricity_tariff_1` Дневной тариф электроэнергии
+- `electricity_tariff_2` Ночной тариф электроэнергии
+- `heater_kwt` Потребляемая мощность котла
