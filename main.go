@@ -34,6 +34,7 @@ func main() {
 
 	myheatClient := myheat.NewClient(clientCfg, logger)
 	metricsService := services.NewMetrics(logger)
+	go metricsService.Run(ctx)
 
 	exporterPullInterval, err := time.ParseDuration(os.Getenv("MYHEAT_EXPORTER_PULL_INTERVAL"))
 	if err != nil {

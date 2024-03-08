@@ -1,7 +1,10 @@
 package services
 
 import (
+	"context"
 	"strconv"
+	"sync"
+	"time"
 
 	"github.com/denistv/wdlogger"
 	"github.com/prometheus/client_golang/prometheus"
@@ -9,9 +12,10 @@ import (
 )
 
 const (
-	metricNameEnvTempCurrent = "myheat_env_temp_current"
-	metricNameEnvTempTarget  = "myheat_env_temp_target"
-	metricNameEnvHeatDemand  = "myheat_env_heat_demand"
+	metricNameEnvTempCurrent       = "myheat_env_temp_current"
+	metricNameEnvTempTarget        = "myheat_env_temp_target"
+	metricNameEnvHeatDemand        = "myheat_env_heat_demand"
+	metricNameEnvHeatDemandSeconds = "myheat_env_heat_demand_seconds_total"
 
 	metricNameDeviceWeatherTemp = "myheat_dev_weather_temp"
 )
@@ -41,6 +45,14 @@ func NewMetrics(logger wdlogger.Logger) *Metrics {
 	envHeatDemandLabels := []string{"id", "name"}
 	envHeatDemandMetric := promauto.NewGaugeVec(envHeatDemandOpts, envHeatDemandLabels)
 
+	// Env heat demand seconds
+	envHeatDemandSecondsOpts := prometheus.CounterOpts{
+		Name: metricNameEnvHeatDemandSeconds,
+		Help: "Подсчитывает время, в течение которого запрошен нагрев",
+	}
+	envHeatDemandSecondsLabels := []string{"id", "name"}
+	envHeatDemandSecondsMetric := promauto.NewCounterVec(envHeatDemandSecondsOpts, envHeatDemandSecondsLabels)
+
 	// Device weather temperature
 	deviceWeatherTempOpts := prometheus.GaugeOpts{
 		Name: metricNameDeviceWeatherTemp,
@@ -52,20 +64,50 @@ func NewMetrics(logger wdlogger.Logger) *Metrics {
 	return &Metrics{
 		logger: logger,
 
-		envTempCurrMetric:       envTempCurrMetric,
-		envTempTargetMetric:     envTempTargetMetric,
-		envHeatDemandMetric:     envHeatDemandMetric,
-		deviceWeatherTempMetric: deviceWeatherTempMetric,
+		envTempCurrMetric:          envTempCurrMetric,
+		envTempTargetMetric:        envTempTargetMetric,
+		envHeatDemandMetric:        envHeatDemandMetric,
+		envHeatDemandSecondsMetric: envHeatDemandSecondsMetric,
+		envHeatDemandSecondsState:  make(map[int64]envHeatDemandState),
+		deviceWeatherTempMetric:    deviceWeatherTempMetric,
 	}
 }
 
 type Metrics struct {
 	logger wdlogger.Logger
 
-	envTempCurrMetric       *prometheus.GaugeVec
-	envTempTargetMetric     *prometheus.GaugeVec
-	envHeatDemandMetric     *prometheus.GaugeVec
-	deviceWeatherTempMetric *prometheus.GaugeVec
+	envTempCurrMetric          *prometheus.GaugeVec
+	envTempTargetMetric        *prometheus.GaugeVec
+	envHeatDemandMetric        *prometheus.GaugeVec
+	envHeatDemandSecondsMetric *prometheus.CounterVec
+	deviceWeatherTempMetric    *prometheus.GaugeVec
+
+	envHeatDemandSecondsStateMu sync.RWMutex
+	envHeatDemandSecondsState   map[int64]envHeatDemandState
+}
+
+func (m *Metrics) Run(ctx context.Context) {
+	ticker := time.NewTicker(time.Second)
+
+	for {
+		select {
+		case <-ticker.C:
+			m.envHeatDemandSecondsStateMu.RLock()
+
+			for _, state := range m.envHeatDemandSecondsState {
+				// Пропускаем env's, нагрев которых выключен
+				if !state.value {
+					continue
+				}
+
+				m.envHeatDemandSecondsMetric.With(state.labels).Inc()
+			}
+
+			m.envHeatDemandSecondsStateMu.RUnlock()
+		case <-ctx.Done():
+			return
+		}
+	}
 }
 
 func envLabels(id int64, name string) map[string]string {
@@ -137,4 +179,33 @@ func (m *Metrics) SetDeviceWeatherTemp(id int64, name string, city string, value
 		"city": city,
 	}
 	m.deviceWeatherTempMetric.With(labels).Set(value)
+}
+
+type envHeatDemandState struct {
+	labels map[string]string
+	value  bool
+}
+
+func (m *Metrics) CountEnvHeatDemandSeconds(id int64, name string, value bool) {
+	m.logger.Info(
+		"set value",
+		wdlogger.NewStringField("metric_name", metricNameEnvHeatDemandSeconds),
+		wdlogger.NewInt64Field("id", id),
+		wdlogger.NewStringField("name", name),
+		wdlogger.NewBoolField("value", value),
+	)
+
+	m.envHeatDemandSecondsStateMu.Lock()
+	defer m.envHeatDemandSecondsStateMu.Unlock()
+
+	state, ok := m.envHeatDemandSecondsState[id]
+	if !ok {
+		state = envHeatDemandState{
+			labels: envLabels(id, name),
+		}
+	}
+
+	// update state
+	state.value = value
+	m.envHeatDemandSecondsState[id] = state
 }

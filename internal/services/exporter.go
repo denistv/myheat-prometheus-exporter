@@ -108,6 +108,7 @@ func (e *Exporter) pull(ctx context.Context) error {
 			e.metricsService.SetEnvironmentTempCurrent(env.ID, env.Name, env.Value)
 			e.metricsService.SetEnvironmentTempTarget(env.ID, env.Name, env.Target)
 			e.metricsService.SetEnvironmentHeatDemand(env.ID, env.Name, env.Demand)
+			e.metricsService.CountEnvHeatDemandSeconds(env.ID, env.Name, env.Demand)
 		}
 	}
 
