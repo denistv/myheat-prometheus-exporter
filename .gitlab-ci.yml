@@ -10,7 +10,15 @@ stages:
 
 build:
   stage: build
+  variables:
+    IMAGE: "registry.denistv777.ru/open/myheat-prometheus-exporter"
   script:
-    - docker build -t registry.denistv777.ru/open/myheat-prometheus-exporter --target=app-image -f Dockerfile --label "version=`git describe --tags`" .
-    - docker push registry.denistv777.ru/open/myheat-prometheus-exporter
-
+    - docker pull $IMAGE:latest || true
+    - >
+      docker build
+      --cache-from $IMAGE:latest
+      --label "image.revision=$CI_COMMIT_SHA"
+      --tag $IMAGE:$CI_COMMIT_SHA
+      --target=app-image -f Dockerfile
+      .
+    - docker push $IMAGE:$CI_COMMIT_SHA
