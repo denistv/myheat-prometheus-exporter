@@ -595,7 +595,7 @@
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
-            "logmin"
+            "min"
           ],
           "fields": "",
           "values": false
@@ -851,7 +851,8 @@
           "color": {
             "mode": "thresholds"
           },
-          "displayName": "Затраты на электричество",
+          "decimals": 0,
+          "displayName": "Прогноз",
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -869,7 +870,7 @@
       },
       "gridPos": {
         "h": 5,
-        "w": 4,
+        "w": 2,
         "x": 0,
         "y": 7
       },
@@ -905,6 +906,143 @@
           "refId": "A"
         }
       ],
+      "title": "Выбранный период",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "bf607a36-0e67-4341-9e53-aa9612ddea8c"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 1,
+          "displayName": "Прогноз",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "currencyRUB",
+          "unitScale": true
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 2,
+        "x": 2,
+        "y": 7
+      },
+      "id": 24,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.3.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "bf607a36-0e67-4341-9e53-aa9612ddea8c"
+          },
+          "editorMode": "code",
+          "expr": "(increase(myheat_env_heat_demand_seconds_total[7d]) / 60 / 60 / 7) * $heater_kwt * $electricity_tariff_1 * 30",
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Месяц",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "bf607a36-0e67-4341-9e53-aa9612ddea8c"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "displayName": "Прогноз",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "kwatth",
+          "unitScale": true
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 2,
+        "x": 4,
+        "y": 7
+      },
+      "id": 25,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.3.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "bf607a36-0e67-4341-9e53-aa9612ddea8c"
+          },
+          "editorMode": "code",
+          "expr": "(increase(myheat_env_heat_demand_seconds_total[30d]) / 60 / 60) * $heater_kwt",
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Энергия",
       "type": "stat"
     },
     {
@@ -966,8 +1104,8 @@
       },
       "gridPos": {
         "h": 5,
-        "w": 20,
-        "x": 4,
+        "w": 18,
+        "x": 6,
         "y": 7
       },
       "id": 4,
@@ -1129,23 +1267,6 @@
           "range": true,
           "refId": "A",
           "useBackend": false
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "bf607a36-0e67-4341-9e53-aa9612ddea8c"
-          },
-          "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "myheat_env_temp_target",
-          "fullMetaSearch": false,
-          "hide": true,
-          "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "B",
-          "useBackend": false
         }
       ],
       "title": "Температура помещения",
@@ -1273,7 +1394,7 @@
         "hide": 2,
         "label": "Тариф на электричество 1",
         "name": "electricity_tariff_1",
-        "query": "4.21",
+        "query": "4.14",
         "skipUrlSync": false,
         "type": "constant"
       },
@@ -1297,13 +1418,13 @@
     ]
   },
   "time": {
-    "from": "now-12h",
+    "from": "now-24h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "MyHeat devices",
   "uid": "b7b5ae01-cab9-4c25-8a06-24824c4711d2",
-  "version": 126,
+  "version": 138,
   "weekStart": "monday"
 }
