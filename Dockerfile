@@ -3,15 +3,11 @@ FROM golang:1.20 AS build
 COPY . /src
 WORKDIR /src
 
+ENV CGO_ENABLED=0
 RUN --mount=type=cache,target=/go go mod download
-RUN --mount=type=cache,target=/root/.cache/go-build go build -race -o bin/app .
-
-# Промежуточный образ, на основе которого будет собран финальный
-FROM alpine:3.18.2 AS bin-image
-WORKDIR /app
-RUN --mount=type=cache,target=/var/cache/apk apk add gcompat
+RUN --mount=type=cache,target=/root/.cache/go-build go build -o bin/app .
 
 # Final image stages
-FROM bin-image AS app-image
+FROM alpine:3.19 AS app
 COPY --from=build /src/bin/app /usr/local/bin/app
 CMD ["/usr/local/bin/app"]

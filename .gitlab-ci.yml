@@ -19,6 +19,6 @@ build:
       --cache-from $IMAGE:latest
       --label "image.revision=$CI_COMMIT_SHA"
       --tag $IMAGE:$CI_COMMIT_SHA
-      --target=app-image -f Dockerfile
+      --target=app -f Dockerfile
       .
     - docker push $IMAGE:$CI_COMMIT_SHA
