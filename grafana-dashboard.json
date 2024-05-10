@@ -1170,8 +1170,36 @@
             "lineWidth": 0,
             "spanNulls": false
           },
-          "mappings": [],
-          "min": 1,
+          "decimals": 0,
+          "fieldMinMax": false,
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "#808080",
+                  "index": 0,
+                  "text": "Неизвестно"
+                },
+                "1": {
+                  "color": "green",
+                  "index": 1,
+                  "text": "Норма"
+                },
+                "32": {
+                  "color": "orange",
+                  "index": 2,
+                  "text": "Предупреждение"
+                },
+                "64": {
+                  "color": "red",
+                  "index": 3,
+                  "text": "Ошибка"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -1180,8 +1208,12 @@
                 "value": null
               },
               {
-                "color": "#EAB839",
-                "value": 2
+                "color": "orange",
+                "value": 32
+              },
+              {
+                "color": "red",
+                "value": 64
               }
             ]
           },
@@ -1204,7 +1236,7 @@
           "placement": "bottom",
           "showLegend": false
         },
-        "mergeValues": true,
+        "mergeValues": false,
         "rowHeight": 0.9,
         "showValue": "never",
         "tooltip": {
@@ -1219,9 +1251,10 @@
             "uid": "bf607a36-0e67-4341-9e53-aa9612ddea8c"
           },
           "disableTextWrap": false,
-          "editorMode": "builder",
+          "editorMode": "code",
           "exemplar": false,
           "expr": "myheat_dev_severity",
+          "format": "time_series",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -1503,13 +1536,13 @@
     ]
   },
   "time": {
-    "from": "now-15m",
+    "from": "now-24h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "MyHeat devices",
   "uid": "b7b5ae01-cab9-4c25-8a06-24824c4711d2",
-  "version": 141,
+  "version": 147,
   "weekStart": "monday"
 }
