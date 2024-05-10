@@ -1,5 +1,5 @@
 default:
-  image: registry.denistv777.ru/docker:24.0.5
+  image: registry.denistv.com/docker:24.0.5
   services:
     - name: docker:24.0.5-dind
 variables:
@@ -11,7 +11,7 @@ stages:
 build:
   stage: build
   variables:
-    IMAGE: "registry.denistv777.ru/open/myheat-prometheus-exporter"
+    IMAGE: "registry.denistv.com/open/myheat-prometheus-exporter"
   script:
     - docker pull $IMAGE:latest || true
     - >

@@ -12,7 +12,7 @@ import (
 	"github.com/denistv/wdlogger"
 )
 
-const endpointURL = "https://my2.myheat.net/api/request/"
+const endpointURL = "https://my.myheat.net/api/request/"
 
 type action string
 
@@ -21,7 +21,12 @@ const (
 	actionGetDeviceInfo action = "getDeviceInfo"
 )
 
-const severityNormal = 1
+const (
+	// К сожалению, поставщик API в своей документации не сообщает все возможные значения в Response,
+	// поэтому здесь перечислены только те, которые мне известны.
+	devSeverityNormal     = 1
+	devSeverityLowBalance = 32
+)
 
 const successResponse = 0
 
