@@ -207,6 +207,7 @@ func (m *Metrics) SetDeviceSeverity(id int64, name string, value int64, desc str
 	labels := defaultLabels(id, name)
 	labels["severity_desc"] = desc
 
+	m.deviceSeverityMetric.Reset()
 	m.deviceSeverityMetric.With(labels).Set(float64(value))
 }
 
