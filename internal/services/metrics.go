@@ -18,6 +18,7 @@ const (
 	metricNameEnvHeatDemandSeconds = "myheat_env_heat_demand_seconds_total"
 
 	metricNameDeviceWeatherTemp = "myheat_dev_weather_temp"
+	metricNameDeviceSeverity    = "myheat_dev_severity"
 )
 
 func NewMetrics(logger wdlogger.Logger) *Metrics {
@@ -61,6 +62,14 @@ func NewMetrics(logger wdlogger.Logger) *Metrics {
 	deviceWeatherTempLabels := []string{"id", "name", "city"}
 	deviceWeatherTempMetric := promauto.NewGaugeVec(deviceWeatherTempOpts, deviceWeatherTempLabels)
 
+	// Severity
+	deviceSeverityOpts := prometheus.GaugeOpts{
+		Name: metricNameDeviceSeverity,
+		Help: "Состояние устройства",
+	}
+	deviceSeverityLabels := []string{"id", "name", "severity_desc"}
+	deviceSeverityMetric := promauto.NewGaugeVec(deviceSeverityOpts, deviceSeverityLabels)
+
 	return &Metrics{
 		logger: logger,
 
@@ -70,6 +79,7 @@ func NewMetrics(logger wdlogger.Logger) *Metrics {
 		envHeatDemandSecondsMetric: envHeatDemandSecondsMetric,
 		envHeatDemandSecondsState:  make(map[int64]envHeatDemandState),
 		deviceWeatherTempMetric:    deviceWeatherTempMetric,
+		deviceSeverityMetric:       deviceSeverityMetric,
 	}
 }
 
@@ -80,7 +90,9 @@ type Metrics struct {
 	envTempTargetMetric        *prometheus.GaugeVec
 	envHeatDemandMetric        *prometheus.GaugeVec
 	envHeatDemandSecondsMetric *prometheus.CounterVec
-	deviceWeatherTempMetric    *prometheus.GaugeVec
+
+	deviceWeatherTempMetric *prometheus.GaugeVec
+	deviceSeverityMetric    *prometheus.GaugeVec
 
 	envHeatDemandSecondsStateMu sync.RWMutex
 	envHeatDemandSecondsState   map[int64]envHeatDemandState
@@ -110,7 +122,8 @@ func (m *Metrics) Run(ctx context.Context) {
 	}
 }
 
-func envLabels(id int64, name string) map[string]string {
+// Дефолтные лейблы для большинства метрик
+func defaultLabels(id int64, name string) map[string]string {
 	return map[string]string{
 		"id":   strconv.FormatInt(id, 10),
 		"name": name,
@@ -119,31 +132,31 @@ func envLabels(id int64, name string) map[string]string {
 
 func (m *Metrics) SetEnvironmentTempCurrent(id int64, name string, value float64) {
 	m.logger.Info(
-		"set value",
+		"set",
 		wdlogger.NewStringField("metric_name", metricNameEnvTempCurrent),
 		wdlogger.NewInt64Field("id", id),
 		wdlogger.NewStringField("name", name),
 		wdlogger.NewFloat64Field("value", value),
 	)
 
-	labels := envLabels(id, name)
+	labels := defaultLabels(id, name)
 	m.envTempCurrMetric.With(labels).Set(value)
 }
 
 func (m *Metrics) SetEnvironmentTempTarget(id int64, name string, value float64) {
 	m.logger.Info(
-		"set value",
+		"set",
 		wdlogger.NewStringField("metric_name", metricNameEnvTempTarget),
 		wdlogger.NewInt64Field("id", id),
 		wdlogger.NewStringField("name", name),
 		wdlogger.NewFloat64Field("value", value),
 	)
 
-	labels := envLabels(id, name)
+	labels := defaultLabels(id, name)
 	m.envTempTargetMetric.With(labels).Set(value)
 }
 
-func bTf(v bool) float64 {
+func boolToFloat64(v bool) float64 {
 	if v {
 		return 1
 	}
@@ -152,20 +165,20 @@ func bTf(v bool) float64 {
 
 func (m *Metrics) SetEnvironmentHeatDemand(id int64, name string, value bool) {
 	m.logger.Info(
-		"set value",
+		"set",
 		wdlogger.NewStringField("metric_name", metricNameEnvHeatDemand),
 		wdlogger.NewInt64Field("id", id),
 		wdlogger.NewStringField("name", name),
 		wdlogger.NewBoolField("value", value),
 	)
 
-	labels := envLabels(id, name)
-	m.envHeatDemandMetric.With(labels).Set(bTf(value))
+	labels := defaultLabels(id, name)
+	m.envHeatDemandMetric.With(labels).Set(boolToFloat64(value))
 }
 
 func (m *Metrics) SetDeviceWeatherTemp(id int64, name string, city string, value float64) {
 	m.logger.Info(
-		"set value",
+		"set",
 		wdlogger.NewStringField("metric_name", metricNameDeviceWeatherTemp),
 		wdlogger.NewInt64Field("id", id),
 		wdlogger.NewStringField("name", name),
@@ -181,6 +194,22 @@ func (m *Metrics) SetDeviceWeatherTemp(id int64, name string, city string, value
 	m.deviceWeatherTempMetric.With(labels).Set(value)
 }
 
+func (m *Metrics) SetDeviceSeverity(id int64, name string, value int64, desc string) {
+	m.logger.Info(
+		"set",
+		wdlogger.NewStringField("metric_name", metricNameDeviceSeverity),
+		wdlogger.NewInt64Field("id", id),
+		wdlogger.NewStringField("name", name),
+		wdlogger.NewInt64Field("value", value),
+		wdlogger.NewStringField("desc", desc),
+	)
+
+	labels := defaultLabels(id, name)
+	labels["severity_desc"] = desc
+
+	m.deviceSeverityMetric.With(labels).Set(float64(value))
+}
+
 type envHeatDemandState struct {
 	labels map[string]string
 	value  bool
@@ -188,7 +217,7 @@ type envHeatDemandState struct {
 
 func (m *Metrics) CountEnvHeatDemandSeconds(id int64, name string, value bool) {
 	m.logger.Info(
-		"set value",
+		"set",
 		wdlogger.NewStringField("metric_name", metricNameEnvHeatDemandSeconds),
 		wdlogger.NewInt64Field("id", id),
 		wdlogger.NewStringField("name", name),
@@ -201,7 +230,7 @@ func (m *Metrics) CountEnvHeatDemandSeconds(id int64, name string, value bool) {
 	state, ok := m.envHeatDemandSecondsState[id]
 	if !ok {
 		state = envHeatDemandState{
-			labels: envLabels(id, name),
+			labels: defaultLabels(id, name),
 		}
 	}
 

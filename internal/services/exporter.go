@@ -99,6 +99,7 @@ func (e *Exporter) pull(ctx context.Context) error {
 		}
 
 		e.metricsService.SetDeviceWeatherTemp(device.ID, device.Name, device.City, deviceInfo.Data.WeatherTemp)
+		e.metricsService.SetDeviceSeverity(device.ID, device.Name, device.Severity, device.SeverityDesc)
 
 		for _, env := range deviceInfo.Data.Envs {
 			if env.Type != myheat.EnvTypeRoomTemperature {
