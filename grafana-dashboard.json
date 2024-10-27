@@ -845,6 +845,7 @@
     },
     {
       "datasource": {
+        "default": true,
         "type": "prometheus",
         "uid": "bf607a36-0e67-4341-9e53-aa9612ddea8c"
       },
@@ -854,7 +855,6 @@
             "mode": "thresholds"
           },
           "decimals": 0,
-          "displayName": "Прогноз",
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -871,7 +871,7 @@
       },
       "gridPos": {
         "h": 5,
-        "w": 2,
+        "w": 4,
         "x": 0,
         "y": 7
       },
@@ -901,18 +901,43 @@
             "uid": "bf607a36-0e67-4341-9e53-aa9612ddea8c"
           },
           "editorMode": "code",
-          "expr": "(increase(myheat_env_heat_demand_seconds_total[$__range]) / 60 / 60) * $heater_kwt * $electricity_tariff_1",
+          "expr": "(increase(myheat_env_heat_tariff_seconds_total{tariff=\"1\"}[$__range]) / 60 / 60) * $heater_kwt * $electricity_tariff_2",
           "instant": false,
-          "legendFormat": "__auto",
+          "legendFormat": "День",
           "range": true,
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "bf607a36-0e67-4341-9e53-aa9612ddea8c"
+          },
+          "editorMode": "code",
+          "expr": "(increase(myheat_env_heat_tariff_seconds_total{tariff=\"2\"}[$__range]) / 60 / 60) * $heater_kwt * $electricity_tariff_2",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "Ночь",
+          "range": true,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "$A+$B",
+          "hide": false,
+          "refId": "Сумма",
+          "type": "math"
         }
       ],
-      "title": "Выбранный период",
+      "title": "Затраты (Период)",
       "type": "stat"
     },
     {
       "datasource": {
+        "default": true,
         "type": "prometheus",
         "uid": "bf607a36-0e67-4341-9e53-aa9612ddea8c"
       },
@@ -922,7 +947,6 @@
             "mode": "thresholds"
           },
           "decimals": 1,
-          "displayName": "Прогноз",
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -939,8 +963,8 @@
       },
       "gridPos": {
         "h": 5,
-        "w": 2,
-        "x": 2,
+        "w": 4,
+        "x": 4,
         "y": 7
       },
       "id": 24,
@@ -969,18 +993,43 @@
             "uid": "bf607a36-0e67-4341-9e53-aa9612ddea8c"
           },
           "editorMode": "code",
-          "expr": "(increase(myheat_env_heat_demand_seconds_total[7d]) / 60 / 60 / 7) * $heater_kwt * $electricity_tariff_1 * 30",
+          "expr": "(increase(myheat_env_heat_tariff_seconds_total{tariff=\"1\"}[7d]) / 60 / 60 / 7) * $heater_kwt * $electricity_tariff_1 * 30",
           "instant": false,
-          "legendFormat": "__auto",
+          "legendFormat": "День",
           "range": true,
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "bf607a36-0e67-4341-9e53-aa9612ddea8c"
+          },
+          "editorMode": "code",
+          "expr": "(increase(myheat_env_heat_tariff_seconds_total{tariff=\"2\"}[7d]) / 60 / 60 / 7) * $heater_kwt * $electricity_tariff_2 * 30",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "Ночь",
+          "range": true,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "$A+$B",
+          "hide": false,
+          "refId": "Сумма",
+          "type": "math"
         }
       ],
-      "title": "Месяц",
+      "title": "Затраты (Месяц)",
       "type": "stat"
     },
     {
       "datasource": {
+        "default": true,
         "type": "prometheus",
         "uid": "bf607a36-0e67-4341-9e53-aa9612ddea8c"
       },
@@ -990,7 +1039,6 @@
             "mode": "thresholds"
           },
           "decimals": 0,
-          "displayName": "Прогноз",
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -1007,8 +1055,8 @@
       },
       "gridPos": {
         "h": 5,
-        "w": 2,
-        "x": 4,
+        "w": 3,
+        "x": 8,
         "y": 7
       },
       "id": 25,
@@ -1037,18 +1085,43 @@
             "uid": "bf607a36-0e67-4341-9e53-aa9612ddea8c"
           },
           "editorMode": "code",
-          "expr": "(increase(myheat_env_heat_demand_seconds_total[30d]) / 60 / 60) * $heater_kwt",
+          "expr": "(increase(myheat_env_heat_tariff_seconds_total{tariff=\"1\"}[30d]) / 60 / 60) * $heater_kwt",
           "instant": false,
-          "legendFormat": "__auto",
+          "legendFormat": "День",
           "range": true,
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "bf607a36-0e67-4341-9e53-aa9612ddea8c"
+          },
+          "editorMode": "code",
+          "expr": "(increase(myheat_env_heat_tariff_seconds_total{tariff=\"2\"}[30d]) / 60 / 60) * $heater_kwt",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "Ночь",
+          "range": true,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "$A+$B",
+          "hide": false,
+          "refId": "Сумма",
+          "type": "math"
         }
       ],
-      "title": "Энергия",
+      "title": "Энергия (Месяц)",
       "type": "stat"
     },
     {
       "datasource": {
+        "default": true,
         "type": "prometheus",
         "uid": "bf607a36-0e67-4341-9e53-aa9612ddea8c"
       },
@@ -1070,7 +1143,6 @@
             "spanNulls": false
           },
           "decimals": 1,
-          "displayName": "Нагрев",
           "fieldMinMax": true,
           "mappings": [
             {
@@ -1105,8 +1177,8 @@
       },
       "gridPos": {
         "h": 5,
-        "w": 9,
-        "x": 6,
+        "w": 7,
+        "x": 11,
         "y": 7
       },
       "id": 4,
@@ -1141,13 +1213,13 @@
           "includeNullMetadata": true,
           "instant": false,
           "interval": "",
-          "legendFormat": "",
+          "legendFormat": "Состояние",
           "range": true,
           "refId": "A",
           "useBackend": false
         }
       ],
-      "title": "История нагрева котла",
+      "title": "Нагрев",
       "type": "state-timeline"
     },
     {
@@ -1220,8 +1292,8 @@
       },
       "gridPos": {
         "h": 5,
-        "w": 9,
-        "x": 15,
+        "w": 6,
+        "x": 18,
         "y": 7
       },
       "id": 26,
@@ -1541,6 +1613,6 @@
   "timezone": "browser",
   "title": "MyHeat devices",
   "uid": "b7b5ae01-cab9-4c25-8a06-24824c4711d2",
-  "version": 152,
+  "version": 166,
   "weekStart": "monday"
 }
