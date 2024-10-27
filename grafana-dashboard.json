@@ -88,8 +88,7 @@
               }
             ]
           },
-          "unit": "celsius",
-          "unitScale": true
+          "unit": "celsius"
         },
         "overrides": []
       },
@@ -115,7 +114,7 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "10.3.3",
+      "pluginVersion": "11.2.0",
       "targets": [
         {
           "datasource": {
@@ -159,8 +158,7 @@
               }
             ]
           },
-          "unit": "celsius",
-          "unitScale": true
+          "unit": "celsius"
         },
         "overrides": []
       },
@@ -176,6 +174,7 @@
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "mean"
@@ -187,7 +186,7 @@
         "textMode": "value",
         "wideLayout": true
       },
-      "pluginVersion": "10.3.3",
+      "pluginVersion": "11.2.0",
       "targets": [
         {
           "datasource": {
@@ -235,8 +234,7 @@
               }
             ]
           },
-          "unit": "bool_on_off",
-          "unitScale": true
+          "unit": "bool_on_off"
         },
         "overrides": []
       },
@@ -252,6 +250,7 @@
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -263,7 +262,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.3.3",
+      "pluginVersion": "11.2.0",
       "targets": [
         {
           "datasource": {
@@ -327,8 +326,7 @@
               }
             ]
           },
-          "unit": "celsius",
-          "unitScale": true
+          "unit": "celsius"
         },
         "overrides": []
       },
@@ -354,7 +352,7 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "10.3.3",
+      "pluginVersion": "11.2.0",
       "targets": [
         {
           "datasource": {
@@ -402,8 +400,7 @@
               }
             ]
           },
-          "unit": "celsius",
-          "unitScale": true
+          "unit": "celsius"
         },
         "overrides": []
       },
@@ -419,6 +416,7 @@
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "mean"
@@ -430,7 +428,7 @@
         "textMode": "value",
         "wideLayout": true
       },
-      "pluginVersion": "10.3.3",
+      "pluginVersion": "11.2.0",
       "targets": [
         {
           "datasource": {
@@ -468,6 +466,10 @@
         "alertInstanceLabelFilter": "",
         "alertName": "",
         "dashboardAlerts": false,
+        "folder": {
+          "title": "myheat",
+          "uid": "a79d4f62-ac79-4389-9906-67960bfa531c"
+        },
         "groupBy": [],
         "groupMode": "default",
         "maxItems": 20,
@@ -475,7 +477,7 @@
         "stateFilter": {
           "error": true,
           "firing": true,
-          "noData": false,
+          "noData": true,
           "normal": true,
           "pending": true
         },
@@ -505,8 +507,7 @@
               }
             ]
           },
-          "unit": "celsius",
-          "unitScale": true
+          "unit": "celsius"
         },
         "overrides": []
       },
@@ -522,6 +523,7 @@
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "logmin"
@@ -533,7 +535,7 @@
         "textMode": "value",
         "wideLayout": true
       },
-      "pluginVersion": "10.3.3",
+      "pluginVersion": "11.2.0",
       "targets": [
         {
           "datasource": {
@@ -576,8 +578,7 @@
               }
             ]
           },
-          "unit": "celsius",
-          "unitScale": true
+          "unit": "celsius"
         },
         "overrides": []
       },
@@ -593,6 +594,7 @@
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "min"
@@ -604,7 +606,7 @@
         "textMode": "value",
         "wideLayout": true
       },
-      "pluginVersion": "10.3.3",
+      "pluginVersion": "11.2.0",
       "targets": [
         {
           "datasource": {
@@ -648,8 +650,7 @@
               }
             ]
           },
-          "unit": "celsius",
-          "unitScale": true
+          "unit": "celsius"
         },
         "overrides": []
       },
@@ -665,6 +666,7 @@
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -676,7 +678,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.3.3",
+      "pluginVersion": "11.2.0",
       "targets": [
         {
           "datasource": {
@@ -719,8 +721,7 @@
               }
             ]
           },
-          "unit": "celsius",
-          "unitScale": true
+          "unit": "celsius"
         },
         "overrides": []
       },
@@ -736,6 +737,7 @@
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "max"
@@ -747,7 +749,7 @@
         "textMode": "value",
         "wideLayout": true
       },
-      "pluginVersion": "10.3.3",
+      "pluginVersion": "11.2.0",
       "targets": [
         {
           "datasource": {
@@ -791,8 +793,7 @@
               }
             ]
           },
-          "unit": "celsius",
-          "unitScale": true
+          "unit": "celsius"
         },
         "overrides": []
       },
@@ -808,6 +809,7 @@
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "max"
@@ -819,7 +821,7 @@
         "textMode": "value",
         "wideLayout": true
       },
-      "pluginVersion": "10.3.3",
+      "pluginVersion": "11.2.0",
       "targets": [
         {
           "datasource": {
@@ -863,8 +865,7 @@
               }
             ]
           },
-          "unit": "currencyRUB",
-          "unitScale": true
+          "unit": "currencyRUB"
         },
         "overrides": []
       },
@@ -880,6 +881,7 @@
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -891,7 +893,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.3.3",
+      "pluginVersion": "11.2.0",
       "targets": [
         {
           "datasource": {
@@ -931,8 +933,7 @@
               }
             ]
           },
-          "unit": "currencyRUB",
-          "unitScale": true
+          "unit": "currencyRUB"
         },
         "overrides": []
       },
@@ -948,6 +949,7 @@
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -959,7 +961,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.3.3",
+      "pluginVersion": "11.2.0",
       "targets": [
         {
           "datasource": {
@@ -999,8 +1001,7 @@
               }
             ]
           },
-          "unit": "kwatth",
-          "unitScale": true
+          "unit": "kwatth"
         },
         "overrides": []
       },
@@ -1016,6 +1017,7 @@
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -1027,7 +1029,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.3.3",
+      "pluginVersion": "11.2.0",
       "targets": [
         {
           "datasource": {
@@ -1097,8 +1099,7 @@
               }
             ]
           },
-          "unit": "bool_on_off",
-          "unitScale": true
+          "unit": "bool_on_off"
         },
         "overrides": []
       },
@@ -1151,13 +1152,14 @@
     },
     {
       "datasource": {
+        "default": true,
         "type": "prometheus",
         "uid": "bf607a36-0e67-4341-9e53-aa9612ddea8c"
       },
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
+            "mode": "fixed"
           },
           "custom": {
             "fillOpacity": 70,
@@ -1170,42 +1172,38 @@
             "lineWidth": 0,
             "spanNulls": false
           },
-          "decimals": 0,
-          "fieldMinMax": false,
           "mappings": [
             {
               "options": {
-                "0": {
-                  "color": "#808080",
-                  "index": 0,
-                  "text": "Неизвестно"
-                },
                 "1": {
                   "color": "green",
-                  "index": 1,
-                  "text": "Норма"
+                  "index": 2,
+                  "text": "Нормальное состояние системы"
                 },
                 "32": {
                   "color": "orange",
-                  "index": 2,
-                  "text": "Предупреждение"
+                  "index": 1,
+                  "text": "Низкий баланс SIM-карты"
                 },
                 "64": {
                   "color": "red",
-                  "index": 3,
-                  "text": "Ошибка"
+                  "index": 0,
+                  "text": "Критическое состояние системы"
                 }
               },
               "type": "value"
             }
           ],
-          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
+                "color": "text",
                 "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
               },
               {
                 "color": "orange",
@@ -1216,9 +1214,7 @@
                 "value": 64
               }
             ]
-          },
-          "unit": "none",
-          "unitScale": true
+          }
         },
         "overrides": []
       },
@@ -1234,9 +1230,9 @@
         "legend": {
           "displayMode": "list",
           "placement": "bottom",
-          "showLegend": false
+          "showLegend": true
         },
-        "mergeValues": false,
+        "mergeValues": true,
         "rowHeight": 0.9,
         "showValue": "never",
         "tooltip": {
@@ -1244,6 +1240,7 @@
           "sort": "none"
         }
       },
+      "pluginVersion": "11.2.0",
       "targets": [
         {
           "datasource": {
@@ -1257,8 +1254,9 @@
           "format": "time_series",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "{{severity_desc}}",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "{{name}}",
           "range": true,
           "refId": "A",
           "useBackend": false
@@ -1297,6 +1295,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 20,
             "gradientMode": "scheme",
@@ -1345,8 +1344,7 @@
               }
             ]
           },
-          "unit": "celsius",
-          "unitScale": true
+          "unit": "celsius"
         },
         "overrides": []
       },
@@ -1407,6 +1405,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 20,
             "gradientMode": "scheme",
@@ -1453,8 +1452,7 @@
                 "value": 26
               }
             ]
-          },
-          "unitScale": true
+          }
         },
         "overrides": []
       },
@@ -1536,13 +1534,13 @@
     ]
   },
   "time": {
-    "from": "now-24h",
+    "from": "now-12h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "MyHeat devices",
   "uid": "b7b5ae01-cab9-4c25-8a06-24824c4711d2",
-  "version": 147,
+  "version": 152,
   "weekStart": "monday"
 }
