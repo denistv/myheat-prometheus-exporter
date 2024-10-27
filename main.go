@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"syscall"
 	"time"
+	_ "time/tzdata"
 
 	"github.com/denistv/myheat-prometheus-exporter/internal/clients/myheat"
 	"github.com/denistv/myheat-prometheus-exporter/internal/services"
@@ -24,6 +25,17 @@ func main() {
 	)
 
 	logger := stdwrap.NewSTDWrapper()
+
+	tz := os.Getenv("TZ")
+
+	if tz != "" {
+		loc, err := time.LoadLocation(tz)
+		if err != nil {
+			logger.Fatal(err.Error())
+		}
+
+		time.Local = loc
+	}
 
 	clientCfg := myheat.NewDefaultConfig()
 	clientCfg.Login = os.Getenv("MYHEAT_LOGIN")
