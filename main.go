@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strconv"
 	"syscall"
 	"time"
 
@@ -33,7 +34,38 @@ func main() {
 	}
 
 	myheatClient := myheat.NewClient(clientCfg, logger)
-	metricsService := services.NewMetrics(logger)
+
+	// Configure tariff selector
+	tariffs := []services.Tariff{}
+
+	envTariff2FromRaw := os.Getenv("MYHEAT_TARIFF2_FROM")
+	envTariff2ToRaw := os.Getenv("MYHEAT_TARIFF2_TO")
+
+	if envTariff2FromRaw != "" && envTariff2ToRaw != "" {
+		tariff2From, err := strconv.ParseInt(envTariff2FromRaw, 10, 32)
+		if err != nil {
+			logger.Fatal(err.Error())
+		}
+
+		tariff2To, err := strconv.ParseInt(envTariff2ToRaw, 10, 32)
+		if err != nil {
+			logger.Fatal(err.Error())
+		}
+
+		nt := services.NewNightTariff(int(tariff2From), int(tariff2To))
+		tariffs = append(tariffs, nt)
+
+		logger.Info(
+			"night tariff applied",
+			wdlogger.NewInt64Field("from", tariff2From),
+			wdlogger.NewInt64Field("to", tariff2To),
+		)
+	}
+
+	tariffSelector := services.NewTariffSelector(time.Now, tariffs)
+	tariffSelector = tariffSelector
+
+	metricsService := services.NewMetrics(logger, tariffSelector)
 	go metricsService.Run(ctx)
 
 	exporterPullInterval, err := time.ParseDuration(os.Getenv("MYHEAT_EXPORTER_PULL_INTERVAL"))
