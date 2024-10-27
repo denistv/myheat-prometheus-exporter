@@ -1582,7 +1582,7 @@
         "hide": 2,
         "label": "Тариф на электричество 1",
         "name": "electricity_tariff_1",
-        "query": "4.14",
+        "query": "4.61",
         "skipUrlSync": false,
         "type": "constant"
       },
@@ -1591,7 +1591,7 @@
         "hide": 2,
         "label": "Тариф на электричество 2",
         "name": "electricity_tariff_2",
-        "query": "4.21",
+        "query": "2.49",
         "skipUrlSync": false,
         "type": "constant"
       },
@@ -1613,6 +1613,6 @@
   "timezone": "browser",
   "title": "MyHeat devices",
   "uid": "b7b5ae01-cab9-4c25-8a06-24824c4711d2",
-  "version": 166,
+  "version": 167,
   "weekStart": "monday"
 }
