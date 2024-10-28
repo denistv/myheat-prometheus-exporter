@@ -16,12 +16,13 @@ const (
 	metricNameEnvTempTarget        = "myheat_env_temp_target"
 	metricNameEnvHeatDemand        = "myheat_env_heat_demand"
 	metricNameEnvHeatDemandSeconds = "myheat_env_heat_demand_seconds_total"
+	metricNameEnvHeatTariffSeconds = "myheat_env_heat_tariff_seconds_total"
 
 	metricNameDeviceWeatherTemp = "myheat_dev_weather_temp"
 	metricNameDeviceSeverity    = "myheat_dev_severity"
 )
 
-func NewMetrics(logger wdlogger.Logger) *Metrics {
+func NewMetrics(logger wdlogger.Logger, ts *TariffSelector) *Metrics {
 	// Environment current temperature
 	envTempCurrOpts := prometheus.GaugeOpts{
 		Name: metricNameEnvTempCurrent,
@@ -54,6 +55,14 @@ func NewMetrics(logger wdlogger.Logger) *Metrics {
 	envHeatDemandSecondsLabels := []string{"id", "name"}
 	envHeatDemandSecondsMetric := promauto.NewCounterVec(envHeatDemandSecondsOpts, envHeatDemandSecondsLabels)
 
+	// Env heat tariff seconds
+	envHeatTariffSecondsOpts := prometheus.CounterOpts{
+		Name: metricNameEnvHeatTariffSeconds,
+		Help: "Подсчитывает время нагрева для разных тарифов",
+	}
+	envHeatTariffSecondsLabels := []string{"id", "tariff"}
+	envHeatTariffSecondsMetric := promauto.NewCounterVec(envHeatTariffSecondsOpts, envHeatTariffSecondsLabels)
+
 	// Device weather temperature
 	deviceWeatherTempOpts := prometheus.GaugeOpts{
 		Name: metricNameDeviceWeatherTemp,
@@ -71,12 +80,14 @@ func NewMetrics(logger wdlogger.Logger) *Metrics {
 	deviceSeverityMetric := promauto.NewGaugeVec(deviceSeverityOpts, deviceSeverityLabels)
 
 	return &Metrics{
-		logger: logger,
+		logger:         logger,
+		tariffSelector: ts,
 
 		envTempCurrMetric:          envTempCurrMetric,
 		envTempTargetMetric:        envTempTargetMetric,
 		envHeatDemandMetric:        envHeatDemandMetric,
 		envHeatDemandSecondsMetric: envHeatDemandSecondsMetric,
+		envHeatTariffSecondsMetric: envHeatTariffSecondsMetric,
 		envHeatDemandSecondsState:  make(map[int64]envHeatDemandState),
 		deviceWeatherTempMetric:    deviceWeatherTempMetric,
 		deviceSeverityMetric:       deviceSeverityMetric,
@@ -84,12 +95,14 @@ func NewMetrics(logger wdlogger.Logger) *Metrics {
 }
 
 type Metrics struct {
-	logger wdlogger.Logger
+	logger         wdlogger.Logger
+	tariffSelector *TariffSelector
 
 	envTempCurrMetric          *prometheus.GaugeVec
 	envTempTargetMetric        *prometheus.GaugeVec
 	envHeatDemandMetric        *prometheus.GaugeVec
 	envHeatDemandSecondsMetric *prometheus.CounterVec
+	envHeatTariffSecondsMetric *prometheus.CounterVec
 
 	deviceWeatherTempMetric *prometheus.GaugeVec
 	deviceSeverityMetric    *prometheus.GaugeVec
@@ -112,7 +125,13 @@ func (m *Metrics) Run(ctx context.Context) {
 					continue
 				}
 
+				// Общая метрика для состояния нагрева
 				m.envHeatDemandSecondsMetric.With(state.labels).Inc()
+
+				// Метрика для учета разных тарифов
+				currTariff := m.tariffSelector.Select()
+				tariffLabels := map[string]string{"id": state.labels["id"], "tariff": currTariff.String()}
+				m.SetTariffHeat(tariffLabels, currTariff)
 			}
 
 			m.envHeatDemandSecondsStateMu.RUnlock()
@@ -128,6 +147,29 @@ func defaultLabels(id int64, name string) map[string]string {
 		"id":   strconv.FormatInt(id, 10),
 		"name": name,
 	}
+}
+
+func copyLabels(m map[string]string) map[string]string {
+	out := make(map[string]string, len(m))
+
+	for k, v := range m {
+		out[k] = v
+	}
+
+	return out
+}
+
+func (m *Metrics) SetTariffHeat(labels map[string]string, tariff TariffType) {
+	m.logger.Info(
+		"set",
+		wdlogger.NewStringField("metric_name", metricNameEnvHeatTariffSeconds),
+		wdlogger.NewStringField("tariff", tariff.String()),
+		//wdlogger.NewInt64Field("id", id),
+		//wdlogger.NewStringField("name", name),
+		//wdlogger.NewFloat64Field("value", value),
+	)
+
+	m.envHeatTariffSecondsMetric.With(labels).Inc()
 }
 
 func (m *Metrics) SetEnvironmentTempCurrent(id int64, name string, value float64) {
@@ -215,6 +257,7 @@ type envHeatDemandState struct {
 	value  bool
 }
 
+// CountEnvHeatDemandSeconds Обновляет состояние нагрева
 func (m *Metrics) CountEnvHeatDemandSeconds(id int64, name string, value bool) {
 	m.logger.Info(
 		"set",
